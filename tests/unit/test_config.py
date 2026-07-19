@@ -19,6 +19,7 @@ def test_settings_postgres_defaults():
     settings = Settings()
 
     assert "postgresql://" in settings.postgres_database_url
+    assert "@localhost:5432/" in settings.postgres_database_url
     assert settings.postgres_echo_sql is False
     assert settings.postgres_pool_size == 20
     assert settings.postgres_max_overflow == 0
