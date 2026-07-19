@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from pathlib import Path
 from typing import Optional
@@ -30,7 +31,9 @@ class PDFParserService:
             raise PDFValidationError(f"PDF file not found: {pdf_path}")
 
         try:
-            result = await self.docling_parser.parse_pdf(pdf_path)
+            # Docling parser is synchronous/blocking. Run it in a thread to avoid
+            # blocking the event loop and to make this method awaitable.
+            result = await asyncio.to_thread(self.docling_parser.parse_pdf, pdf_path)
             if result:
                 logger.info(f"Parsed {pdf_path.name}")
                 return result
